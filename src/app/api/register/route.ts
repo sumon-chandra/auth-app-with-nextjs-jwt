@@ -7,10 +7,8 @@ export async function POST(req: Request) {
 	try {
 		await connectDB();
 		const { email, password } = await req.json();
-
+		// Check if user is already exist in database
 		const isUserExist = await User.findOne({ email });
-		console.log({ isUserExist });
-
 		if (isUserExist) {
 			return new NextResponse("User already exists!!", { status: 409 });
 		}
@@ -19,7 +17,6 @@ export async function POST(req: Request) {
 		// Create a new user
 		const newUser = new User({ email, password: hashedPassword });
 		await newUser.save();
-		console.log({ newUser });
 
 		return NextResponse.json(newUser);
 	} catch (error) {
