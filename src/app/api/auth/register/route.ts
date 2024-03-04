@@ -1,5 +1,5 @@
 import User from "@/models/User";
-import { hashPassword } from "@/utils/auth";
+import bcrypt from "bcryptjs";
 import { connectDB } from "@/utils/db";
 import { NextResponse } from "next/server";
 
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 			return new NextResponse("User already exists!!", { status: 409 });
 		}
 		// Hash password before saving in the database
-		const hashedPassword = hashPassword(password);
+		const hashedPassword = bcrypt.hashSync(password);
 		// Create a new user
 		const newUser = new User({ email, password: hashedPassword });
 		await newUser.save();

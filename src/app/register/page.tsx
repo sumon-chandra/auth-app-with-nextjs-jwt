@@ -1,30 +1,34 @@
 "use client";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { SyntheticEvent } from "react";
 
-const LoginPage = () => {
+export default function RegisterPage() {
 	const { push } = useRouter();
-	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (e: SyntheticEvent) => {
 		e.preventDefault();
-		const payload = {
-			email: e.currentTarget.email.value,
-			password: e.currentTarget.password.value,
+		const target = e.target as typeof e.target & {
+			email: { value: string };
+			password: { value: string };
 		};
+		const email = target.email.value;
+		const password = target.password.value;
+
 		try {
-			const { data } = await axios.post("/api/auth/login", payload);
-			console.log({ data });
-			push("/dashboard");
-		} catch (e) {
-			const error = e as AxiosError;
-			alert(error.message);
+			axios.post("/api/auth/register", { email, password }).then((response) => {
+				const data = response.data;
+				push("/login");
+			});
+		} catch (error: any) {
+			console.log("Something went wrong!!");
 		}
 	};
+
 	return (
 		<main className="flex items-center justify-center min-h-screen text-black">
 			<div className="space-y-6 p-6 rounded-lg w-[400px] bg-slate-100">
-				<header className="text-xl font-bold text-center border-b-2">Login</header>
+				<header className="text-xl font-bold text-center border-b-2">Register</header>
 				<form className="space-y-6" onSubmit={handleSubmit}>
 					<div>
 						<label htmlFor="email" className="font-semibold text-lg">
@@ -32,7 +36,7 @@ const LoginPage = () => {
 						</label>
 						<input
 							type="email"
-							name="email"
+							name=""
 							id="email"
 							required
 							className="w-full border p-2 border-black rounded-md"
@@ -44,23 +48,23 @@ const LoginPage = () => {
 						</label>
 						<input
 							type="password"
-							name="password"
+							name=""
 							id="password"
 							required
 							className="w-full border p-2 border-black rounded-md"
 						/>
 					</div>
-					<button className="bg-black text-gray-300 font-bold w-full py-2 rounded-md">Login</button>
+					<button type="submit" className="bg-black text-white font-bold w-full py-2 rounded-md">
+						Register
+					</button>
 				</form>
 				<div className="text-sm">
 					<span>New to here? </span>
-					<Link href="/register" className="underline">
-						register please
+					<Link href="login" className="underline">
+						login please
 					</Link>
 				</div>
 			</div>
 		</main>
 	);
-};
-
-export default LoginPage;
+}
