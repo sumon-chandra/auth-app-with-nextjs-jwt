@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import { toast } from "sonner";
 
 const LoginPage = () => {
 	const { push } = useRouter();
@@ -15,12 +16,12 @@ const LoginPage = () => {
 		try {
 			const { data } = await axios.post("/api/auth/login", payload);
 			console.log({ data });
+			toast("Login successful!!");
 			push("/dashboard");
 		} catch (e) {
 			const error = e as AxiosError;
 			console.log({ error });
-
-			alert(error.message);
+			toast("Failed to login!! please try again.");
 		}
 	};
 	return (
@@ -52,7 +53,7 @@ const LoginPage = () => {
 							className="w-full border p-2 border-black rounded-md"
 						/>
 					</div>
-					<button className="bg-black text-gray-300 font-bold w-full py-2 rounded-md">Login</button>
+					<button className="bg-black disabled:opacity-50 text-gray-300 font-bold w-full py-2 rounded-md">Login</button>
 				</form>
 				<div className="text-sm">
 					<span>New to here? </span>

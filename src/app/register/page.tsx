@@ -3,6 +3,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent } from "react";
+import { toast } from "sonner";
 
 export default function RegisterPage() {
 	const { push } = useRouter();
@@ -18,9 +19,11 @@ export default function RegisterPage() {
 		try {
 			axios.post("/api/auth/register", { email, password }).then((response) => {
 				const data = response.data;
+				toast("Thanks for registration!!! Now please login.");
 				push("/login");
 			});
 		} catch (error: any) {
+			toast("Failed to register!!! Please try again");
 			console.log("Something went wrong!!");
 		}
 	};
@@ -54,7 +57,7 @@ export default function RegisterPage() {
 							className="w-full border p-2 border-black rounded-md"
 						/>
 					</div>
-					<button type="submit" className="bg-black text-white font-bold w-full py-2 rounded-md">
+					<button type="submit" className="bg-black disabled:opacity-50 text-white font-bold w-full py-2 rounded-md">
 						Register
 					</button>
 				</form>
