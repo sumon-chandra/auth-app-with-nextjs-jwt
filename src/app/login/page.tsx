@@ -18,6 +18,8 @@ const LoginPage = () => {
 			push("/dashboard");
 		} catch (e) {
 			const error = e as AxiosError;
+			console.log({ error });
+
 			alert(error.message);
 		}
 	};
